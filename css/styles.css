@@ -1,0 +1,176 @@
+/* Color Variables */
+:root {
+    --color-background: #0A192F;
+    --color-primary-text: #CCD6F6;
+    --color-accent: #64FFDA;
+    --color-subtext: #8892B0;
+    --color-highlight: #112240;
+}
+
+/* Custom styles */
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* Custom Cursor */
+.cursor-dot {
+    width: 8px;
+    height: 8px;
+    background-color: #64FFDA;
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    border-radius: 50%;
+    z-index: 9999;
+    transition: transform 0.1s ease;
+}
+
+.cursor-outline {
+    width: 40px;
+    height: 40px;
+    border: 2px solid var(--color-accent);
+    position: fixed;
+    top: -16px;
+    left: -16px;
+    pointer-events: none;
+    border-radius: 50%;
+    z-index: 9998;
+    transition: all 0.2s ease-out;
+}
+
+/* Cursor states */
+a:hover ~ .cursor-outline,
+button:hover ~ .cursor-outline,
+input:hover ~ .cursor-outline,
+textarea:hover ~ .cursor-outline {
+    transform: scale(1.5);
+    background-color: rgba(100, 255, 218, 0.1);
+    border-color: rgba(100, 255, 218, 0.5);
+}
+
+/* Hide default cursor */
+body {
+    cursor: none;
+    background-color: var(--color-background);
+    color: var(--color-primary-text);
+}
+
+/* Page Transition */
+.page-transition {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-background);
+    z-index: 9999;
+    transform: scaleY(0);
+    transform-origin: bottom;
+}
+
+#scroll-indicator {
+    animation: float 2s ease-in-out infinite;
+}
+
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* About section initial states */
+.about-image {
+    transform: translateY(30px);
+}
+
+#about-heading,
+#about-text,
+#about-highlights,
+#resume-button {
+    transform: translateY(30px);
+}
+
+/* Projects section initial states */
+#projects-heading {
+    transform: translateY(30px);
+}
+
+.project-card {
+    transform: translateY(30px);
+}
+
+/* Project tab styles */
+.project-tab {
+    transition: all 0.3s ease;
+    color: var(--color-primary-text);
+    border-color: var(--color-accent);
+}
+
+.project-tab:hover {
+    background-color: var(--color-highlight);
+}
+
+.project-tab.active {
+    background-color: var(--color-accent);
+    color: var(--color-background);
+}
+
+/* Contact section initial states */
+#contact-heading,
+#contact-form {
+    transform: translateY(30px);
+}
+
+/* Form input focus styles */
+input:focus,
+textarea:focus {
+    box-shadow: 0 0 0 2px var(--color-accent);
+}
+
+/* Toast styles */
+#toast {
+    z-index: 1000;
+}
+
+/* Additional utility classes */
+.text-accent {
+    color: var(--color-accent);
+}
+
+.text-subtext {
+    color: var(--color-subtext);
+}
+
+.bg-highlight {
+    background-color: var(--color-highlight);
+}
+
+.hover-accent:hover {
+    color: var(--color-accent);
+}
+
+.border-accent {
+    border-color: var(--color-accent);
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+* {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+
+.bg-\[\#112240\] {
+    --tw-bg-opacity1: 1;
+    background-color: rgb(0 0 0) !important;
+}
