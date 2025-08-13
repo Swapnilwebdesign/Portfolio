@@ -271,131 +271,150 @@ document.addEventListener('DOMContentLoaded', () => {
         counterObserver.observe(aboutSection);
     }
 
+
+
     // Projects section animations
-    const projectsTl = gsap.timeline({
-        scrollTrigger: {
-            trigger: '#projects-heading',
-            start: 'top 80%',
-            end: 'bottom 20%',
-            toggleActions: 'play none none reverse'
-        }
-    });
+    
+    // Projects section animations
+const projectsTl = gsap.timeline({
+    scrollTrigger: {
+        trigger: '#projects-heading',
+        start: 'top 80%',
+        end: 'bottom 20%',
+        toggleActions: 'play none none reverse'
+    }
+});
 
-    projectsTl
-        .to('#projects-heading', {
+projectsTl
+    .to('#projects-heading', {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        ease: 'power3.out'
+    })
+    .to('.project-card', {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        stagger: 0.2,
+        ease: 'power2.out'
+    }, '-=0.4');
+
+// Project filtering
+const projectTabs = document.querySelectorAll('.project-tab');
+const projectCards = document.querySelectorAll('.project-card');
+
+// Show "webpages" tab as default
+projectTabs.forEach(tab => {
+    if (tab.dataset.category === 'webpages') {
+        tab.classList.add('bg-white', 'text-black');
+    }
+});
+
+// Show only "webpages" projects by default
+projectCards.forEach(card => {
+    if (card.dataset.category === 'webpages') {
+        gsap.to(card, {
             opacity: 1,
-            y: 0,
-            duration: 1,
-            ease: 'power3.out'
-        })
-        .to('.project-card', {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            stagger: 0.2,
+            scale: 1,
+            duration: 0.5,
             ease: 'power2.out'
-        }, '-=0.4');
+        });
+    } else {
+        gsap.to(card, {
+            opacity: 0,
+            scale: 0.8,
+            duration: 0.5,
+            ease: 'power2.in',
+            onComplete: () => {
+                card.style.display = 'none';
+            }
+        });
+    }
+});
 
-    // Project filtering
-    const projectTabs = document.querySelectorAll('.project-tab');
-    const projectCards = document.querySelectorAll('.project-card');
+projectTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+        // Remove active state from all tabs
+        projectTabs.forEach(t => {
+            t.classList.remove('bg-white', 'text-black');
+        });
 
-    // Set Major Projects as default active tab
-    projectTabs.forEach(tab => {
-        if (tab.dataset.category === 'major') {
-            tab.classList.add('bg-white', 'text-black');
-        }
-    });
+        // Add active state to clicked tab
+        tab.classList.add('bg-white', 'text-black');
 
-    // Show only major projects by default
-    projectCards.forEach(card => {
-        if (card.dataset.category === 'major') {
-            gsap.to(card, {
-                opacity: 1,
-                scale: 1,
-                duration: 0.5,
-                ease: 'power2.out'
-            });
-        } else {
-            gsap.to(card, {
-                opacity: 0,
-                scale: 0.8,
-                duration: 0.5,
-                ease: 'power2.in',
-                onComplete: () => {
-                    card.style.display = 'none';
-                }
-            });
-        }
-    });
-
-    projectTabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            // Remove active state from all tabs
-            projectTabs.forEach(t => {
-                t.classList.remove('bg-white', 'text-black');
-            });
-
-            // Add active state to clicked tab
-            tab.classList.add('bg-white', 'text-black');
-
-            // Get the selected category
-            const category = tab.dataset.category;
-            
-            // First, fade out all cards
-            const fadeOutPromises = Array.from(projectCards).map(card => {
-                return new Promise(resolve => {
-                    gsap.to(card, {
-                        opacity: 0,
-                        scale: 0.8,
-                        duration: 0.5,
-                        ease: 'power2.in',
-                        onComplete: () => {
-                            card.style.display = 'none';
-                            resolve();
-                        }
-                    });
+        // Get the selected category
+        const category = tab.dataset.category;
+        
+        // Fade out all cards first
+        const fadeOutPromises = Array.from(projectCards).map(card => {
+            return new Promise(resolve => {
+                gsap.to(card, {
+                    opacity: 0,
+                    scale: 0.8,
+                    duration: 0.5,
+                    ease: 'power2.in',
+                    onComplete: () => {
+                        card.style.display = 'none';
+                        resolve();
+                    }
                 });
             });
+        });
 
-            // After all cards are faded out, fade in the selected category cards
-            Promise.all(fadeOutPromises).then(() => {
-                const selectedCards = Array.from(projectCards).filter(card => 
-                    card.dataset.category === category
-                );
+        // Then fade in the selected category cards
+        Promise.all(fadeOutPromises).then(() => {
+            const selectedCards = Array.from(projectCards).filter(card => 
+                card.dataset.category === category
+            );
 
-                selectedCards.forEach((card, index) => {
-                    card.style.display = 'block';
-                    gsap.to(card, {
-                        opacity: 1,
-                        scale: 1,
-                        duration: 0.5,
-                        delay: index * 0.2, // Add delay between each card
-                        ease: 'power2.out'
-                    });
+            selectedCards.forEach((card, index) => {
+                card.style.display = 'block';
+                gsap.to(card, {
+                    opacity: 1,
+                    scale: 1,
+                    duration: 0.5,
+                    delay: index * 0.2,
+                    ease: 'power2.out'
                 });
             });
         });
     });
+});
 
-    // Add hover animations for project cards
-    projectCards.forEach(card => {
-        card.addEventListener('mouseenter', () => {
-            gsap.to(card, {
-                y: -10,
-                duration: 0.3,
-                ease: 'power2.out'
-            });
-        });
-
-        card.addEventListener('mouseleave', () => {
-            gsap.to(card, {
-                y: 0,
-                duration: 0.3,
-                ease: 'power2.out'
-            });
+// Hover animations
+projectCards.forEach(card => {
+    card.addEventListener('mouseenter', () => {
+        gsap.to(card, {
+            y: -10,
+            duration: 0.3,
+            ease: 'power2.out'
         });
     });
+
+    card.addEventListener('mouseleave', () => {
+        gsap.to(card, {
+            y: 0,
+            duration: 0.3,
+            ease: 'power2.out'
+        });
+    });
+});
+
+// Ensure "webpages" tab is triggered on page load
+document.addEventListener("DOMContentLoaded", function () {
+    const defaultTab = document.querySelector('.project-tab[data-category="webpages"]');
+    if (defaultTab) defaultTab.click();
+});
+
+
+
+
+
+
+
+
+
 
     // Contact section animations
     const contactTl = gsap.timeline({
@@ -475,43 +494,62 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 3000);
     }
 
-    form.addEventListener('submit', async (e) => {
+    
+
+// Contact Form Submit + Toast Notification
+document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("contact-form");
+    const toast = document.getElementById("toast");
+    const toastMessage = document.getElementById("toast-message");
+
+    form.addEventListener("submit", async function (e) {
         e.preventDefault();
 
-        const submitButton = form.querySelector('button[type="submit"]');
-        const originalText = submitButton.textContent;
-        
-        // Disable button and show loading state
-        submitButton.disabled = true;
-        submitButton.textContent = 'Sending...';
+        const formData = new FormData(form);
 
         try {
-            const formData = {
-                name: form.name.value,
-                email: form.email.value,
-                message: form.message.value
-            };
+            const response = await fetch(form.action, {
+                method: form.method,
+                body: formData,
+                headers: { Accept: "application/json" }
+            });
 
-            // Send email using EmailJS
-            await emailjs.send(
-                'service_g8yurcq', // Replace with your EmailJS service ID
-                'template_lc977zg', // Replace with your EmailJS template ID
-                formData
-            );
-
-            // Show success message
-            showToast('Message sent successfully!');
-            form.reset();
+            if (response.ok) {
+                form.reset();
+                showToast("Message sent successfully!", true);
+            } else {
+                showToast("Error sending message. Please try again.", false);
+            }
         } catch (error) {
-            // Show error message
-            showToast('Failed to send message. Please try again.', false);
-            console.error('EmailJS error:', error);
-        } finally {
-            // Re-enable button and restore text
-            submitButton.disabled = false;
-            submitButton.textContent = originalText;
+            showToast("Network error. Please try again.", false);
         }
     });
+
+    function showToast(message, success = true) {
+        toastMessage.textContent = message;
+
+        // Remove previous state classes
+        toast.classList.remove("toast-success", "toast-error");
+
+        // Add success or error style
+        toast.classList.add(success ? "toast-success" : "toast-error");
+
+        // Show toast
+        toast.classList.remove("translate-y-20", "opacity-0");
+        toast.classList.add("translate-y-0", "opacity-100");
+
+        // Hide after 3s
+        setTimeout(() => {
+            toast.classList.remove("translate-y-0", "opacity-100");
+            toast.classList.add("translate-y-20", "opacity-0");
+        }, 3000);
+    }
+});
+
+
+
+
+
 
     // Add input focus animations
     const inputs = form.querySelectorAll('input, textarea');
@@ -537,6 +575,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const subheadings = [
         "FREELANCER",
         "FRONTEND DEVELOPER",
+        "WEB DESIGNER",
         "PROBLEM SOLVER",
         "UI/UX DESIGNER"
     ];
