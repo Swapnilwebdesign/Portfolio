@@ -174,3 +174,12 @@ textarea:focus {
     --tw-bg-opacity1: 1;
     background-color: rgb(0 0 0) !important;
 }
+
+ .toast-show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    .toast-hide {
+      transform: translateY(100%);
+      opacity: 0;
+    }
