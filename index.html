@@ -449,10 +449,12 @@ With a strong eye for detail and user experience, I aim to craft digital interfa
       
       <form 
         id="contact-form" 
-        action="https://formspree.io/f/mpwvrzwg" 
-        method="POST" 
+        method="POST"
         class="space-y-4 sm:space-y-6 bg-[#112240] p-6 rounded-lg shadow-lg"
       >
+        <!-- Web3Forms Access Key -->
+        <input type="hidden" name="access_key" value="31e23c8f-24a2-49a7-821f-73a96588e992">
+
         <div class="space-y-2">
           <label for="name" class="block text-sm font-medium">Name</label>
           <input 
@@ -495,10 +497,12 @@ With a strong eye for detail and user experience, I aim to craft digital interfa
         >
           Send Message
         </button>
+
+        <!-- Status Message -->
+        <p id="result" class="text-center mt-4 font-semibold"></p>
       </form>
     </div>
-  </section>
-
+</section>
   <!-- Toast Container -->
   <div id="toast" 
     class="fixed bottom-8 right-8 toast-hide transition-all duration-500 rounded-lg shadow-lg px-6 py-4 bg-green-600 text-white">
@@ -560,25 +564,36 @@ With a strong eye for detail and user experience, I aim to craft digital interfa
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 <script src="js/script.js"></script>
 <script>
-    document.getElementById('contact-form').addEventListener('submit', async function (e) {
-        e.preventDefault();
+  const form = document.getElementById('contact-form');
+  const result = document.getElementById('result');
 
-    const form = e.target;
-    const data = new FormData(form);
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
 
-    const response = await fetch(form.action, {
-      method: form.method,
-      body: data,
+    result.innerHTML = "Sending...";
+    
+    const formData = new FormData(form);
+    const object = Object.fromEntries(formData);
+    const json = JSON.stringify(object);
+
+    let response = await fetch("https://api.web3forms.com/submit", {
+      method: "POST",
       headers: {
-        'Accept': 'application/json'
-      }
+        "Content-Type": "application/json",
+        Accept: "application/json"
+      },
+      body: json
     });
 
+    let data = await response.json();
+
     if (response.ok) {
-      alert('✅ Message sent successfully!');
+      result.style.color = "#00ff9d";
+      result.innerHTML = "✔ Your message has been sent successfully!";
       form.reset();
     } else {
-      alert('❌ Error sending message. Please try again.');
+      result.style.color = "#ff6b6b";
+      result.innerHTML = "❌ Something went wrong: " + (data.message || "Please try again");
     }
   });
 </script>
